@@ -8,28 +8,28 @@ clc
 clear
 
 % Create random input for the robot
-xmin=1;
-xmax=3;
+xmin= 1;
+xmax= 3;
 x=xmin+rand()*(xmax-xmin);
-ymin=-1;
-ymax=1;
+ymin= -0.3;
+ymax= 0.3;
 y=ymin+rand()*(ymax-ymin);
 
 % Create noise and state of the robot
-Q = [ 0.05, 0, 0; 0, 0.05, 0; 0, 0, 0.005 ];
-N = [ 0.02, 0; 0, 0.002 ];
+Q = [ 0.0005, 0, 0; 0, 0.0005, 0; 0, 0, 0.000005 ];
+N = [ 0.0002, 0; 0, 0.000002 ];
 noise = mvnrnd([0,0,0], Q)';
-landmark = [1000, 1000; -1000, -1000; 1000, -1000];
+landmark = [1000, 1000; -1000, -1000; 1000, -1000; -1000, 1000 ];
 % n_landmarks = size(landmark, 1);
 X = [0; 0; 0];
 X_true = X + noise;
-dt = 0.1;
-u = [x;y];
+dt = 0.001;
+u = [5;5];
 trajectory_x = X(1);
 trajectory_y = X(2);
 trajectory_x_true = X_true(1);
 trajectory_y_true = X_true(2);
-
+update = [];
 i = 0;
 T = 0;
 % rng('default')
@@ -39,12 +39,12 @@ covariance = Q;
 % bearing_array_true = [];
 
 %% Loop
-while( T < 100)
+while( T < 30)
 
 % Create random input
 x=xmin+rand()*(xmax-xmin);
 y=ymin+rand()*(ymax-ymin);
-u = [x,y];
+u = [5+i*0.01, 5];
 
 % Create state and measure noise
 noise = mvnrnd([0,0,0], Q)';
@@ -59,9 +59,13 @@ X = prediction_step(X, u, dt);
 % EKF
 [range_true, bearing_true] = measure_step(X_true, landmark, noise_measure);
 [range, bearing] = measure_prediction(X, landmark);
+update(1) = 0;
+update(2) = 0;
 
-if mod(i,1) == 0
+if mod(i, 10) == 0 && i~=0
 [X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
+update(i,1) = X(1);
+update(i,2) = X(2);
 end
 
 % Update trajectories for plot
@@ -84,4 +88,5 @@ hold on
 plot(trajectory_x_true, trajectory_y_true)
 % plot(landmark(1), landmark(2), 'x')
 plot(trajectory_x, trajectory_y)
+% plot(update(:,1), update(:,2), 'x')
 axis equal
