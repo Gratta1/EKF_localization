@@ -19,7 +19,8 @@ y=ymin+rand()*(ymax-ymin);
 Q = [ 0.05, 0, 0; 0, 0.05, 0; 0, 0, 0.005 ];
 N = [ 0.02, 0; 0, 0.002 ];
 noise = mvnrnd([0,0,0], Q)';
-landmark = [1000, 1000];
+landmark = [1000, 1000; -1000, -1000; 1000, -1000];
+% n_landmarks = size(landmark, 1);
 X = [0; 0; 0];
 X_true = X + noise;
 dt = 0.1;
@@ -34,11 +35,11 @@ T = 0;
 % rng('default')
 
 covariance = Q;
-bearing_array = [];
-bearing_array_true = [];
+% bearing_array = [];
+% bearing_array_true = [];
 
 %% Loop
-while( T < 100)
+while( T < 1000)
 
 % Create random input
 x=xmin+rand()*(xmax-xmin);
@@ -66,8 +67,8 @@ trajectory_x = [trajectory_x, X(1)];
 trajectory_y = [trajectory_y, X(2)];
 trajectory_x_true = [trajectory_x_true, X_true(1)];
 trajectory_y_true = [trajectory_y_true, X_true(2)];
-bearing_array_true = [bearing_array_true, bearing_true];
-bearing_array = [bearing_array, bearing];
+% bearing_array_true = [bearing_array_true, bearing_true];
+% bearing_array = [bearing_array, bearing];
 
 i = i+1;
 T = T+dt;
