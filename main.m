@@ -39,7 +39,7 @@ covariance = Q;
 % bearing_array_true = [];
 
 %% Loop
-while( T < 1000)
+while( T < 100)
 
 % Create random input
 x=xmin+rand()*(xmax-xmin);
@@ -60,7 +60,9 @@ X = prediction_step(X, u, dt);
 [range_true, bearing_true] = measure_step(X_true, landmark, noise_measure);
 [range, bearing] = measure_prediction(X, landmark);
 
+if mod(i,1) == 0
 [X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
+end
 
 % Update trajectories for plot
 trajectory_x = [trajectory_x, X(1)];
@@ -72,10 +74,8 @@ trajectory_y_true = [trajectory_y_true, X_true(2)];
 
 i = i+1;
 T = T+dt;
-%  if abs(X(1)-X_true(1)) > 3 || abs(X(2)-X_true(2)) > 3
-%     break
-%  end
-%  
+
+
 end
 
 %% Plot trajectories and landmark position

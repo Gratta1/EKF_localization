@@ -20,8 +20,8 @@ sum_2 = sum_2 + K*H;
 
 end
 
-updated_state = X + sum_1/i;
-updated_covariance = (eye(3) - sum_2/i)*covariance;
+updated_state = X + sum_1/n_landmark;
+updated_covariance = (eye(3) - sum_2/n_landmark)*covariance;
 
 end
 
