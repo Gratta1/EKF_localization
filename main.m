@@ -11,18 +11,18 @@ clear
 vmin=1;
 vmax=3;
 v=vmin+rand()*(vmax-vmin);
-wmin=-1;
-wmax=1;
+wmin= - 0.3;
+wmax= 0.3;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.05, 0, 0; 0, 0.05, 0; 0, 0, 0.005 ];
-N = [ 0.02, 0; 0, 0.002 ];
+Q = [ 0.0005, 0, 0; 0, 0.0005, 0; 0, 0, 0.00005 ];
+N = [ 0.0002, 0; 0, 0.00002 ];
 noise = mvnrnd([0,0,0], Q)';
 landmark = [1000, 1000];
 X = [0; 0; 0];
 X_true = X + noise;
-dt = 0.1;
+dt = 0.001;
 u = [v;w];
 trajectory_x = X(1);
 trajectory_y = X(2);
@@ -38,7 +38,7 @@ bearing_array = [];
 bearing_array_true = [];
 
 %% Loop
-while( T < 100)
+while( T < 10)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
