@@ -94,6 +94,30 @@ plot(trajectory_x_true, trajectory_y_true)
 plot(trajectory_x, trajectory_y)
 plot(landmark(1), landmark(2), 'x')
 plot(X(4), X(5), 'x')
-
-% plot(update(:,1), update(:,2), 'x')
 axis equal
+
+figure  
+subplot(2,1,1)
+plot(trajectory_x)
+subplot(2,1,2)
+plot(trajectory_x_true)
+
+figure  
+subplot(2,1,1)
+plot(trajectory_y)
+subplot(2,1,2)
+plot(trajectory_y_true)
+
+figure  
+subplot(2,1,1)
+plot(theta)
+subplot(2,1,2)
+plot(theta_true)
+
+figure  
+subplot(3,1,1)
+plot(covariance_x)
+subplot(3,1,2)
+plot(covariance_y)
+subplot(3,1,3)
+plot(covariance_theta)
