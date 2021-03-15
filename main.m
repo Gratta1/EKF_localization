@@ -50,7 +50,7 @@ covariance(5,5) = 0.0005;
 
 %% Loop
 
-while( T < 100)
+while( T < 10)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -74,7 +74,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0;
 update(2) = 0;
 
-if mod(i, 1) == 0 && i~=0
+if mod(i, 100000) == 0 && i~=0
 [X, covariance, K] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);
