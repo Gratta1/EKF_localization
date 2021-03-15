@@ -22,8 +22,8 @@ N = [ 0.002, 0; 0, 0.00002 ];
 noise = mvnrnd([0,0,0, 0, 0], Q)';
 landmark = [30, 18];
 % n_landmarks = size(landmark, 1);
-X = [0; 0; 0; 32; 20];
-X_true = X + noise - [0; 0; 0; 2; 2];
+X = [0; 0; 0; 30.5; 18.5];
+X_true = X + noise - [0; 0; 0; 0.5; 0.5];
 dt = 0.01;
 u = [v;w];
 trajectory_x = X(1);
@@ -31,14 +31,21 @@ trajectory_y = X(2);
 trajectory_x_true = X_true(1);
 trajectory_y_true = X_true(2);
 update = [];
+theta = [];
+theta_true = [];
+update = [];
+covariance_x = [];
+covariance_y = [];
+covariance_theta= [];
+
 i = 0;
 
 T = 0;
 % rng('default')
 
 covariance = Q;
-covariance(4,4) = 0;
-covariance(5,5) = 0;
+covariance(4,4) = 0.0005;
+covariance(5,5) = 0.0005;
 
 
 %% Loop
@@ -67,7 +74,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0;
 update(2) = 0;
 
-if mod(i, 1) == 0 && i~=0
+if mod(i, 10) == 0 && i~=0
 [X, covariance, K] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);
@@ -78,6 +85,13 @@ trajectory_x = [trajectory_x, X(1)];
 trajectory_y = [trajectory_y, X(2)];
 trajectory_x_true = [trajectory_x_true, X_true(1)];
 trajectory_y_true = [trajectory_y_true, X_true(2)];
+theta = [theta, X(3)];
+theta_true = [theta_true; X_true(3)];
+update = [];
+covariance_x = [covariance_x; covariance(1,1)];
+covariance_y = [covariance_y; covariance(2,2)];
+covariance_theta= [covariance_theta; covariance(3,3)];
+
 % bearing_array_true = [bearing_array_true, bearing_true];
 % bearing_array = [bearing_array, bearing];
 

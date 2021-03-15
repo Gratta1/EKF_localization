@@ -12,7 +12,6 @@ bearing(i) = atan2(X(5) - X(2), X(4) - X(1)) - X(3);
 
 end
 
-
 end
 
 
