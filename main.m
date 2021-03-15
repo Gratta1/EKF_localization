@@ -11,8 +11,8 @@ clear
 vmin= 1;
 vmax= 3;
 v=vmin+rand()*(vmax-vmin);
-wmin= -2;
-wmax= 2;
+wmin= -1;
+wmax= 1;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
