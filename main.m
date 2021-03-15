@@ -17,13 +17,13 @@ wmax= 5;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.0005, 0, 0, 0, 0; 0, 0.0005, 0, 0, 0; 0, 0, 0.000005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
-N = [ 0.0002, 0; 0, 0.000002 ];
+Q = [ 0.0009, 0, 0, 0, 0; 0, 0.0009, 0, 0, 0; 0, 0, 0.0005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
+N = [ 0.02, 0; 0, 0.0002 ];
 noise = mvnrnd([0,0,0, 0, 0], Q)';
 landmark = [30, 18];
 % n_landmarks = size(landmark, 1);
-X = [0; 0; 0; 35; 23];
-X_true = X + noise - [0; 0; 0; 5; 5];
+X = [0; 0; 0; 32; 20];
+X_true = X + noise - [0; 0; 0; 2; 2];
 dt = 0.01;
 u = [v;w];
 trajectory_x = X(1);
@@ -32,10 +32,13 @@ trajectory_x_true = X_true(1);
 trajectory_y_true = X_true(2);
 update = [];
 i = 0;
+
 T = 0;
 % rng('default')
 
 covariance = Q;
+covariance(4,4) = 1;
+covariance(5,5) = 1;
 
 
 %% Loop
@@ -64,7 +67,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0;
 update(2) = 0;
 
-if mod(i, 10) == 0 && i~=0
+if mod(i, 100) == 0 && i~=0
 [X, covariance, K] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);

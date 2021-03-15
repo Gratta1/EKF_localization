@@ -9,8 +9,8 @@ for i = 1:n_landmark
 y = [range_true(i); bearing_true(i)] - [range(i); bearing(i)];
 
 % Jacobian of the measurement model
-H = [(X(1) - landmark(i,1))/range(i), (X(2) - landmark(i,2))/range(i), 0, (landmark(i,1) - X(1))/range(i), (landmark(i,2) - X(2))/range(i); ...
-    (landmark(i,2) - X(2))/range(i)^2, (X(1) - landmark(i,1))/range(i)^2, -1, (X(2) - landmark(i,2))/range(i)^2, (X(1) - landmark(i,1))/range(i)^2 ];
+H = [(X(1) - X(4)/range(i)), (X(2) - X(5))/range(i), 0, (X(4) - X(1))/range(i), (X(5) - X(2))/range(i); ...
+    (X(5) - X(2))/range(i)^2, (X(1) - X(4))/range(i)^2, -1, (X(2) - X(5))/range(i)^2, (X(4) - X(1))/range(i)^2 ];
 
 S = H*covariance*H'+ N;
 K = covariance*H'*pinv(S);
