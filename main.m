@@ -17,7 +17,7 @@ wmax= 5;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.0005, 0, 0, 0, 0; 0, 0.0005, 0, 0, 0; 0, 0, 0.00005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
+Q = [ 0.0005, 0, 0, 0, 0; 0, 0.0005, 0, 0, 0; 0, 0, 0.000005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
 N = [ 0.002, 0; 0, 0.00002 ];
 noise = mvnrnd([0,0,0, 0, 0], Q)';
 landmark = [30, 18];
@@ -37,7 +37,8 @@ update = [];
 covariance_x = [];
 covariance_y = [];
 covariance_theta= [];
-
+range_true_array = [];
+range_array = [];
 i = 0;
 T = 0;
 % rng('default')
@@ -49,7 +50,7 @@ covariance(5,5) = 0.0005;
 
 %% Loop
 
-while( T < 10)
+while( T < 100)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -90,7 +91,8 @@ update = [];
 covariance_x = [covariance_x; covariance(1,1)];
 covariance_y = [covariance_y; covariance(2,2)];
 covariance_theta= [covariance_theta; covariance(3,3)];
-
+range_true_array = [range_true_array, range_true];
+range_array = [range_array, range];
 % bearing_array_true = [bearing_array_true, bearing_true];
 % bearing_array = [bearing_array, bearing];
 
@@ -134,3 +136,9 @@ subplot(3,1,2)
 plot(covariance_y)
 subplot(3,1,3)
 plot(covariance_theta)
+
+figure
+subplot(2,1,1)
+plot(range_true_array)
+subplot(2,1,2)
+plot(range_array)
