@@ -69,7 +69,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0; 
 update(2) = 0;
 
-if mod(i, 10) == 0 && i~=0
+if mod(i, 1) == 0 && i~=0
 [X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);
