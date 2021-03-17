@@ -12,8 +12,8 @@ clear
 vmin= 1;
 vmax= 3;
 v=vmin+rand()*(vmax-vmin);
-wmin= -5;
-wmax= 5;
+wmin= -2;
+wmax= 2;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
@@ -31,8 +31,8 @@ trajectory_y = X(2);
 trajectory_x_true = X_true(1);
 trajectory_y_true = X_true(2);
 update = [];
-theta = [];
-theta_true = [];
+theta = X(3);
+theta_true = X_true(3);
 update = [];
 covariance_x = [];
 covariance_y = [];
@@ -50,7 +50,7 @@ covariance(5,5) = 0.0005;
 
 %% Loop
 
-while( T < 10)
+while( T < 30)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -86,7 +86,7 @@ trajectory_y = [trajectory_y, X(2)];
 trajectory_x_true = [trajectory_x_true, X_true(1)];
 trajectory_y_true = [trajectory_y_true, X_true(2)];
 theta = [theta, X(3)];
-theta_true = [theta_true; X_true(3)];
+theta_true = [theta_true, X_true(3)];
 update = [];
 covariance_x = [covariance_x; covariance(1,1)];
 covariance_y = [covariance_y; covariance(2,2)];
@@ -142,3 +142,23 @@ subplot(2,1,1)
 plot(range_true_array)
 subplot(2,1,2)
 plot(range_array)
+
+%% Animated plot
+figure('Name', 'Animated');
+ylim([-10 10]);
+xlim([-1 100]);
+axis equal
+hPlot = plot(NaN,NaN,'ro');
+for k=1:size(trajectory_x,2)
+     cla
+     hold on
+%   set(hPlot, 'XData', trajectory_x(k), 'YData', trajectory_y(k))
+    plot(trajectory_x(k), trajectory_y(k), 'o', 'MarkerSize', 8);
+    plot([trajectory_x(k), trajectory_x(k) + 2*cos(theta(k))], [trajectory_y(k), trajectory_y(k) + 2*sin(theta(k))]);
+    plot(trajectory_x_true(k), trajectory_y_true(k), 'x', 'MarkerSize', 8);
+    plot([trajectory_x_true(k), trajectory_x_true(k) + 2*cos(theta_true(k))], [trajectory_y_true(k), trajectory_y_true(k) + 2*sin(theta_true(k))]);
+
+    ylim([-10 10]);
+    xlim([-1 100]);
+    pause(0.001);
+end
