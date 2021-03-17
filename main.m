@@ -29,8 +29,8 @@ trajectory_x = X(1);
 trajectory_y = X(2);
 trajectory_x_true = X_true(1);
 trajectory_y_true = X_true(2);
-theta = [];
-theta_true = [];
+theta = X(3);
+theta_true = X_true(3);
 update = [];
 covariance_x = [];
 covariance_y = [];
@@ -69,7 +69,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0; 
 update(2) = 0;
 
-if mod(i, 1) == 0 && i~=0
+if mod(i, 10) == 0 && i~=0
 [X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);
@@ -80,11 +80,11 @@ trajectory_x = [trajectory_x, X(1)];
 trajectory_y = [trajectory_y, X(2)];
 trajectory_x_true = [trajectory_x_true, X_true(1)];
 trajectory_y_true = [trajectory_y_true, X_true(2)];
-theta = [theta; X(3)];
+theta = [theta, X(3)];
 theta_true = [theta_true, X_true(3)];
-covariance_x = [covariance_x; covariance(1,1)];
-covariance_y = [covariance_y; covariance(2,2)];
-covariance_theta= [covariance_theta; covariance(3,3)];
+covariance_x = [covariance_x, covariance(1,1)];
+covariance_y = [covariance_y, covariance(2,2)];
+covariance_theta= [covariance_theta, covariance(3,3)];
 % bearing_array_true = [bearing_array_true, bearing_true];
 % bearing_array = [bearing_array, bearing];
 
@@ -128,3 +128,23 @@ subplot(3,1,2)
 plot(covariance_y)
 subplot(3,1,3)
 plot(covariance_theta)
+
+%% Plot animated trajectory
+figure('Name', 'Animated');
+ylim([-10 10]);
+xlim([-1 100]);
+axis equal
+hPlot = plot(NaN,NaN,'ro');
+for k=1:size(trajectory_x,2)
+     cla
+     hold on
+%   set(hPlot, 'XData', trajectory_x(k), 'YData', trajectory_y(k))
+    plot(trajectory_x(k), trajectory_y(k), 'o', 'MarkerSize', 8);
+    plot([trajectory_x(k), trajectory_x(k) + 2*cos(theta(k))], [trajectory_y(k), trajectory_y(k) + 2*sin(theta(k))]);
+    plot(trajectory_x_true(k), trajectory_y_true(k), 'x', 'MarkerSize', 8);
+    plot([trajectory_x_true(k), trajectory_x_true(k) + 2*cos(theta_true(k))], [trajectory_y_true(k), trajectory_y_true(k) + 2*sin(theta_true(k))]);
+
+    ylim([-10 10]);
+    xlim([-1 100]);
+    pause(0.05);
+end
