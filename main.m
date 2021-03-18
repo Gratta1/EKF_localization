@@ -23,7 +23,7 @@ noise = mvnrnd([0,0,0, 0, 0], Q)';
 landmark = [30, 18];
 % n_landmarks = size(landmark, 1);
 X = [0; 0; 0; 31; 19];
-X_true = X + noise - [0; 0; 0; 1; 1];
+X_true = X - [0; 0; 0; 1; 1];
 dt = 0.01;
 u = [v;w];
 trajectory_x = X(1);
@@ -50,7 +50,7 @@ covariance(5,5) = 0.0005;
 
 %% Loop
 
-while( T < 30)
+while( T < 10)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -74,7 +74,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0;
 update(2) = 0;
 
-if mod(i, 100000) == 0 && i~=0
+if mod(i, 1) == 0 && i~=0
 [X, covariance, K] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);
@@ -152,7 +152,6 @@ hPlot = plot(NaN,NaN,'ro');
 for k=1:size(trajectory_x,2)
      cla
      hold on
-%   set(hPlot, 'XData', trajectory_x(k), 'YData', trajectory_y(k))
     plot(trajectory_x(k), trajectory_y(k), 'o', 'MarkerSize', 8);
     plot([trajectory_x(k), trajectory_x(k) + 2*cos(theta(k))], [trajectory_y(k), trajectory_y(k) + 2*sin(theta(k))]);
     plot(trajectory_x_true(k), trajectory_y_true(k), 'x', 'MarkerSize', 8);
@@ -160,5 +159,5 @@ for k=1:size(trajectory_x,2)
 
     ylim([-10 10]);
     xlim([-1 100]);
-    pause(0.001);
+    pause(0.1);
 end
