@@ -47,7 +47,7 @@ bearing_array_true = [];
 command_array = [];
 model_noise_array = noise;
 %% Loop
-while( T < 30 && diverge == 0)
+while( T < 600 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -68,10 +68,10 @@ X = prediction_step(X, u, dt);
 [range_true, bearing_true] = measure_step(X_true, landmark, noise_measure);
 [range, bearing] = measure_prediction(X, landmark);
 
-if (abs(bearing(1)-bearing_true(1)) > 0.5 || abs(bearing(2)-bearing(2)) > 0.5 || abs(bearing(3)-bearing_true(3)) > 0.5 || abs(bearing(4)-bearing(4)) > 0.5)
-    diverge = 1;
-    X_prior = X;
-end
+% if (abs(bearing(1)-bearing_true(1)) > 0.5 || abs(bearing(2)-bearing(2)) > 0.5 || abs(bearing(3)-bearing_true(3)) > 0.5 || abs(bearing(4)-bearing(4)) > 0.5)
+%     diverge = 1;
+%     X_prior = X;
+% end
 
 update(1) = 0; 
 update(2) = 0;
