@@ -19,11 +19,11 @@ w=wmin+rand()*(wmax-wmin);
 % Create noise and state of the robot
 Q = [ 0.005, 0, 0, 0, 0; 0, 0.005, 0, 0, 0; 0, 0, 0.00005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
 N = [ 0.002, 0; 0, 0.00002 ];
-noise = mvnrnd([0,0,0, 0, 0], Q)';
+noise = mvnrnd([0,0,0,0,0], Q)';
 landmark = [30, 18];
 % n_landmarks = size(landmark, 1);
-X = [0; 0; 0; 31; 19];
-X_true = X - [0; 0; 0; 1; 1];
+X = [0; 0; 0; 30; 18];
+X_true = X - [0; 0; 0; 0; 0];
 dt = 0.01;
 u = [v;w];
 trajectory_x = X(1);
@@ -44,16 +44,16 @@ T = 0;
 % rng('default')
 
 covariance = Q;
-covariance(4,4) = 0.005;
-covariance(5,5) = 0.005;
+covariance(4,4) = 0.00;
+covariance(5,5) = 0.00;
 
 bearing_array = [];
 bearing_array_true = [];
-
+diverge = 0;
 
 %% Loop
 
-while( T < 10)
+while( T < 10 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -102,9 +102,11 @@ bearing_array = [bearing_array; bearing];
 i = i+1;
 T = T+dt;
 
+% if(abs(bearing-bearing_true) > 0.5 && abs(range-range_true) > 2)
+%     diverge = 1;
+% end
 
 end
-
 %% Plot trajectories and landmark position
 figure  
 hold on 
