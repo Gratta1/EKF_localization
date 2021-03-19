@@ -17,7 +17,7 @@ wmax= 2;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.0005, 0, 0, 0, 0; 0, 0.0005, 0, 0, 0; 0, 0, 0.000005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
+Q = [ 0.005, 0, 0, 0, 0; 0, 0.005, 0, 0, 0; 0, 0, 0.00005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
 N = [ 0.002, 0; 0, 0.00002 ];
 noise = mvnrnd([0,0,0, 0, 0], Q)';
 landmark = [30, 18];
@@ -44,8 +44,11 @@ T = 0;
 % rng('default')
 
 covariance = Q;
-covariance(4,4) = 0.0005;
-covariance(5,5) = 0.0005;
+covariance(4,4) = 0.005;
+covariance(5,5) = 0.005;
+
+bearing_array = [];
+bearing_array_true = [];
 
 
 %% Loop
@@ -93,8 +96,8 @@ covariance_y = [covariance_y; covariance(2,2)];
 covariance_theta= [covariance_theta; covariance(3,3)];
 range_true_array = [range_true_array, range_true];
 range_array = [range_array, range];
-% bearing_array_true = [bearing_array_true, bearing_true];
-% bearing_array = [bearing_array, bearing];
+bearing_array_true = [bearing_array_true; bearing_true];
+bearing_array = [bearing_array; bearing];
 
 i = i+1;
 T = T+dt;
@@ -111,6 +114,7 @@ plot(landmark(1), landmark(2), 'x')
 plot(X(4), X(5), 'x')
 axis equal
 
+%% Plot other stuff
 figure  
 subplot(2,1,1)
 plot(trajectory_x)
@@ -143,6 +147,12 @@ plot(range_true_array)
 subplot(2,1,2)
 plot(range_array)
 
+figure
+subplot(2,1,1)
+plot(bearing_array_true)
+subplot(2,1,2)
+plot(bearing_array)
+
 %% Animated plot
 figure('Name', 'Animated');
 ylim([-10 10]);
@@ -159,5 +169,5 @@ for k=1:size(trajectory_x,2)
 
     ylim([-10 10]);
     xlim([-1 100]);
-    pause(0.1);
+    pause(1);
 end
