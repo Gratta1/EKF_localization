@@ -47,7 +47,7 @@ bearing_array_true = [];
 command_array = [];
 model_noise_array = noise;
 %% Loop
-while( T < 600 && diverge == 0)
+while( T < 100 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -76,7 +76,7 @@ X = prediction_step(X, u, dt);
 update(1) = 0; 
 update(2) = 0;
 
-if mod(i, 50) == 0 && i~=0
+if mod(i, 1) == 0 && i~=0
 [X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
 update(i,1) = X(1);
 update(i,2) = X(2);
