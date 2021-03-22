@@ -12,18 +12,18 @@ clear
 vmin= 1;
 vmax= 3;
 v=vmin+rand()*(vmax-vmin);
-wmin= -1;
-wmax= 1;
+wmin= -2;
+wmax= 2;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.005, 0, 0, 0, 0; 0, 0.005, 0, 0, 0; 0, 0, 0.000000000005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
-N = [ 0.0002, 0; 0, 0.0000002 ];
+Q = [ 0.0005, 0, 0, 0, 0; 0, 0.0005, 0, 0, 0; 0, 0, 0.00005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
+N = [ 0.002, 0; 0, 0.00002 ];
 noise = mvnrnd([0,0,0,0,0], Q)';
-landmark = [5, 2];
+landmark = [50, 20];
 % n_landmarks = size(landmark, 1);
-X = [0; 0; pi/2; 5; 2];
-X_true = X - [0; 0; 0; 0; 0];
+X = [0; 0; 0; 51; 21];
+X_true = X - [0; 0; 0; 1; 1];
 dt = 0.01;
 % u = [v;w];
 trajectory_x = X(1);
@@ -41,11 +41,11 @@ range_true_array = [];
 range_array = [];
 i = 0;
 T = 0;
-% rng('default')
+rng('default')
 
 covariance = zeros(5,5);
-covariance(4,4) = 0.00;
-covariance(5,5) = 0.00;
+covariance(4,4) = 0.005;
+covariance(5,5) = 0.005;
 
 bearing_array = [];
 bearing_array_true = [];
@@ -53,7 +53,7 @@ diverge = 0;
 
 %% Loop
 
-while( T < 10 && diverge == 0)
+while( T < 100 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -79,7 +79,7 @@ X_true(3) = wrapToPi(X_true(3));
 update(1) = 0;
 update(2) = 0;
 
-if mod(i, 1) == 0 && i~=0
+if mod(i, 1) == 0 && i~=0 %&& abs(bearing - bearing_true) < 0.5
 [X, covariance, K] = update_step(X, landmark, range, bearing,...
                                     range_true, bearing_true, covariance, N);
 X(3) = wrapToPi(X(3));
@@ -106,9 +106,9 @@ bearing_array = [bearing_array; bearing];
 i = i+1;
 T = T+dt;
 
-% if(abs(bearing-bearing_true) > 0.5 && abs(range-range_true) > 2)
-%     diverge = 1;
-% end
+if(abs(bearing-bearing_true) > 0.1 && abs(range-range_true) > 2)
+     diverge = 1;
+end
 
 end
 %% Plot trajectories and landmark position
@@ -159,6 +159,11 @@ plot(bearing_array_true)
 subplot(2,1,2)
 plot(bearing_array)
 
+figure
+plot(bearing_array - bearing_array_true)
+
+figure
+plot(range_array-range_true_array)
 %% Animated plot
 figure('Name', 'Animated');
 ylim([-10 10]);
