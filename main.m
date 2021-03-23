@@ -66,7 +66,7 @@ noise = mvnrnd([0,0,0,0,0], Q)';
 noise_measure = mvnrnd([0, 0], N)';
 
 % Move forward the robot (adding noise) and prediction step
-covariance = predict_covariance(X, covariance, Q, u, dt);
+covariance = predict_covariance(X, covariance, Q, u, dt, landmark);
 X_true = move_forward(X_true, u, dt, noise);
 X = prediction_step(X, u, dt);
 X(3) = wrapToPi(X(3));
