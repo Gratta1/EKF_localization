@@ -8,11 +8,13 @@ clc
 clear
 
 % Create random input for the robot
+
 vmin= 1;
 vmax= 3;
 v=vmin+rand()*(vmax-vmin);
 wmin= -3;
 wmax= 3;
+
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
@@ -24,7 +26,7 @@ landmark = [10, 30; -10, -26; 78, -45; -68, 14; -100, 100; 88, -120; -200, -150 
 X = [-300; -10; 0];
 X_true = X + noise;
 dt = 0.01;
-
+u = [v;w];
 trajectory_x = X(1);
 trajectory_y = X(2);
 trajectory_x_true = X_true(1);
@@ -49,10 +51,13 @@ model_noise_array = noise;
 %% Loop
 while( T < 300 && diverge == 0)
 
+
 % Create random input
 v=vmin+rand()*(vmax-vmin);
 w=wmin+rand()*(wmax-wmin);
-u = [v, 0];
+
+
+u = [v,w];
 
 % Create state and measure noise
 noise = mvnrnd([0,0,0], Q)';
