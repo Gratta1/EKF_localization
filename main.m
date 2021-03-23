@@ -16,12 +16,12 @@ wmax= 3;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.0005, 0, 0; 0, 0.0005, 0; 0, 0, 0.00005 ];
-N = [ 0.002, 0; 0, 0.0002 ];
+Q = [ 0.0005, 0, 0; 0, 0.0005, 0; 0, 0, 0.000005 ];
+N = [ 0.0002, 0; 0, 0.00002 ];
 noise = mvnrnd([0,0,0], Q)';
-landmark = [10, 30; -10, -26; 78, -45; -68, 14 ];
+landmark = [10, 30; -10, -26; 78, -45; -68, 14; -100, 100; 88, -120; -200, -150 ];
 % n_landmarks = size(landmark, 1);
-X = [0; 0; 0];
+X = [-300; -10; 0];
 X_true = X + noise;
 dt = 0.01;
 
@@ -47,12 +47,12 @@ bearing_array_true = [];
 command_array = [];
 model_noise_array = noise;
 %% Loop
-while( T < 10000 && diverge == 0)
+while( T < 300 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
 w=wmin+rand()*(wmax-wmin);
-u = [v, w];
+u = [v, 0];
 
 % Create state and measure noise
 noise = mvnrnd([0,0,0], Q)';
@@ -62,6 +62,8 @@ model_noise_array = [model_noise_array; noise];
 covariance = predict_covariance(X, covariance, Q, u, dt);
 X_true = move_forward(X_true, u, dt, noise);
 X = prediction_step(X, u, dt);
+X_true(3) = WrapTo2Pi(X_true(3));
+X(3) = WrapTo2Pi(X(3));
 
 % Measure the distance from the landmark and make the measurement step for
 % EKF
@@ -78,6 +80,7 @@ update(2) = 0;
 
 if mod(i, 1) == 0 && i~=0
 [X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
+X(3) = WrapTo2Pi(X(3));
 update(i,1) = X(1);
 update(i,2) = X(2);
 end
@@ -105,9 +108,9 @@ end
 figure  
 hold on 
 plot(trajectory_x_true, trajectory_y_true)
-% for j=1:4
-% plot(landmark(j,1), landmark(j,2), 'x')
-% end
+for j=1:length(landmark)
+plot(landmark(j,1), landmark(j,2), 'x')
+end
 plot(trajectory_x, trajectory_y)
 % plot(update(:,1), update(:,2), 'x')
 axis equal
