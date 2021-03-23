@@ -16,12 +16,12 @@ wmax= 3;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.05, 0, 0; 0, 0.05, 0; 0, 0, 0.0005 ];
-N = [ 0.02, 0; 0, 0.002 ];
-noise = mvnrnd([0,0,0], Q.^2)';
+Q = [ 0.0005, 0, 0; 0, 0.0005, 0; 0, 0, 0.00005 ];
+N = [ 0.002, 0; 0, 0.0002 ];
+noise = mvnrnd([0,0,0], Q)';
 landmark = [10, 30; -10, -26; 78, -45; -68, 14 ];
 % n_landmarks = size(landmark, 1);
-X = [0; 0; pi/2];
+X = [0; 0; 0];
 X_true = X + noise;
 dt = 0.01;
 
@@ -47,7 +47,7 @@ bearing_array_true = [];
 command_array = [];
 model_noise_array = noise;
 %% Loop
-while( T < 100 && diverge == 0)
+while( T < 10000 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -55,8 +55,8 @@ w=wmin+rand()*(wmax-wmin);
 u = [v, w];
 
 % Create state and measure noise
-noise = mvnrnd([0,0,0], Q.^2)';
-noise_measure = mvnrnd([0, 0], N.^2)';
+noise = mvnrnd([0,0,0], Q)';
+noise_measure = mvnrnd([0, 0], N)';
 model_noise_array = [model_noise_array; noise];
 % Move forward the robot (adding noise) and prediction step
 covariance = predict_covariance(X, covariance, Q, u, dt);
