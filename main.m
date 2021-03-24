@@ -59,7 +59,7 @@ diverge = 0;
 
 %% Loop
 
-while( T < 10 && diverge == 0)
+while( T < 100 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
