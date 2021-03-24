@@ -49,7 +49,7 @@ bearing_array_true = [];
 command_array = [];
 model_noise_array = noise;
 %% Loop
-while( T <10 && diverge == 0)
+while( T < 60 && diverge == 0)
 
 
 % Create random input
@@ -72,8 +72,8 @@ model_noise_array = [model_noise_array; noise];
 covariance = predict_covariance(X, covariance, Q, u, dt);
 X_true = move_forward(X_true, u, dt, noise);
 X = prediction_step(X, u, dt);
-X_true(3) = WrapTo2Pi(wrapToPi(X_true(3)));
-X(3) = WrapTo2Pi(wrapToPi(X(3)));
+X_true(3) = wrapToPi(X_true(3));
+X(3) = wrapToPi(X(3));
 
 % Measure the distance from the landmark and make the measurement step for
 % EKF
@@ -89,8 +89,8 @@ update(1) = 0;
 update(2) = 0;
 
 if mod(i, 1) == 0 && i~=0
-[X, covariance, K] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
-X(3) = WrapTo2Pi(wrapToPi(X(3)));
+[X, covariance] = update_step(X, landmark, range, bearing, range_true, bearing_true, covariance, N);
+X(3) = wrapToPi(X(3));
 update(i,1) = X(1);
 update(i,2) = X(2);
 end

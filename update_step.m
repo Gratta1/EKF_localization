@@ -16,13 +16,16 @@ for i = 1:n_landmark
 
         S = H*covariance*H'+ N;
         K = covariance*H'*pinv(S);
-
+%         X = X + K*y;
+%         covariance = (eye(3) - K*H)*covariance;
         sum_1 =  sum_1 + K*y;
         sum_2 = sum_2 + K*H;
         active_landmark = active_landmark + 1;
    end
 end
 
+% updated_state = X;
+% updated_covariance = covariance;
 
 updated_state = X + sum_1/active_landmark;
 updated_covariance = (eye(3) - sum_2/active_landmark)*covariance;
