@@ -22,11 +22,11 @@ G = H*F_j;
 S = G*covariance*G'+ N;
 K = covariance*G'*pinv(S);
 
-X = X + K*y;
-covariance = (eye(3+2*n_landmark)- K*G)*covariance;
+
 end
 
-
+X = X + K*y;
+covariance = (eye(3+2*n_landmark)- K*G)*covariance;
 
 updated_state = X;
 updated_covariance = covariance;

@@ -24,10 +24,10 @@ Q(1,1) = 0.0005;
 Q(2,2) = 0.0005;
 Q(3,3) = 0.00005;
 mean_Q = zeros(1, 3+ 2*n_landmark);
-N = [ 0.2, 0; 0, 0.02 ];
+N = [ 0.002, 0; 0, 0.00002 ];
 noise = mvnrnd(mean_Q, Q)';
-X = [0; 0; 0; 52; 52; -32; -32];
-X_true = X - [0; 0; 0; 2; 2; -2; -2];
+X = [0; 0; 0; 51; 51; -31; -31];
+X_true = X - [0; 0; 0; 1; 1; -1; -1];
 dt = 0.01;
 % u = [v;w];
 trajectory_x = X(1);
@@ -48,10 +48,10 @@ T = 0;
 rng('default')
 
 covariance = zeros(3+2*n_landmark);
-covariance(4,4) = 0.05;
-covariance(5,5) = 0.05;
-covariance(6,6) = 0.05;
-covariance(7,7) = 0.05;
+covariance(4,4) = 0.005;
+covariance(5,5) = 0.005;
+covariance(6,6) = 0.005;
+covariance(7,7) = 0.005;
 
 bearing_array = [];
 bearing_array_true = [];
