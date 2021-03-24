@@ -56,7 +56,8 @@ while( T <10 && diverge == 0)
 v=vmin+rand()*(vmax-vmin);
 w=wmin+rand()*(wmax-wmin);
 
-u = [2+i/100,2];
+u =  [v;w];
+% u = [2+i/100,2];
 % if T < 5
 % u = [2;0];
 % else
@@ -137,6 +138,7 @@ plot(trajectory_y)
 subplot(2,1,2)
 plot(trajectory_y_true)
 % 
+
 figure  
 subplot(2,1,1)
 plot(theta)
