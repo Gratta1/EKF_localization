@@ -12,16 +12,24 @@ y = [range_true(i); bearing_true(i)] - [range(i); bearing(i)];
 H = [((X(1) - X(4))/range(i)), (X(2) - X(5))/range(i), 0, (X(4) - X(1))/range(i), (X(5) - X(2))/range(i); ...
     (X(5) - X(2))/range(i)^2, (X(1) - X(4))/range(i)^2, -1, (X(2) - X(5))/range(i)^2, (X(4) - X(1))/range(i)^2 ];
 
-S = H*covariance*H'+ N;
-K = covariance*H'*pinv(S);
+F_j = zeros(5, 3+2*n_landmark);
+F_j(1,1) = 1;
+F_j(2,2) = 1;
+F_j(3,3) = 1;
+F_j(4,2+2*i) = 1;
+F_j(5,2+2*i+1) = 1;
+G = H*F_j;
+S = G*covariance*G'+ N;
+K = covariance*G'*pinv(S);
 
-sum_1 =  sum_1 + K*y;
-sum_2 = sum_2 + K*H;
+X = X + K*y;
+covariance = (eye(3+2*n_landmark)- K*G)*covariance;
+
 
 end
 
-updated_state = X + sum_1/n_landmark;
-updated_covariance = (eye(5)- sum_2/n_landmark)*covariance;
+updated_state = X;
+updated_covariance = covariance;
 
 end
 

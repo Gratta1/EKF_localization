@@ -17,13 +17,17 @@ wmax= 2;
 w=wmin+rand()*(wmax-wmin);
 
 % Create noise and state of the robot
-Q = [ 0.0005, 0, 0, 0, 0; 0, 0.0005, 0, 0, 0; 0, 0, 0.00005, 0, 0; 0, 0, 0, 0, 0;0, 0, 0, 0, 0 ];
+landmark = [50, 50; -30, -30];
+n_landmark = size(landmark, 1);
+Q = zeros(3+2*n_landmark);
+Q(1,1) = 0.0005;
+Q(2,2) = 0.0005;
+Q(3,3) = 0.00005;
+mean_Q = zeros(1, 3+ 2*n_landmark);
 N = [ 0.002, 0; 0, 0.00002 ];
-noise = mvnrnd([0,0,0,0,0], Q)';
-landmark = [50, 50];
-% n_landmarks = size(landmark, 1);
-X = [0; 0; 0; 52; 52];
-X_true = X - [0; 0; 0; 2; 2];
+noise = mvnrnd(mean_Q, Q)';
+X = [0; 0; 0; 52; 52; -32; -32];
+X_true = X - [0; 0; 0; 2; 2; -2; -2];
 dt = 0.01;
 % u = [v;w];
 trajectory_x = X(1);
@@ -43,9 +47,11 @@ i = 0;
 T = 0;
 rng('default')
 
-covariance = zeros(5,5);
+covariance = zeros(3+2*n_landmark);
 covariance(4,4) = 0.005;
 covariance(5,5) = 0.005;
+covariance(6,6) = 0.005;
+covariance(7,7) = 0.005;
 
 bearing_array = [];
 bearing_array_true = [];
@@ -53,7 +59,7 @@ diverge = 0;
 
 %% Loop
 
-while( T < 100 && diverge == 0)
+while( T < 10 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
@@ -62,7 +68,7 @@ w=wmin+rand()*(wmax-wmin);
 u = [v,w];
 
 % Create state and measure noise
-noise = mvnrnd([0,0,0,0,0], Q)';
+noise = mvnrnd(mean_Q, Q)';
 noise_measure = mvnrnd([0, 0], N)';
 
 % Move forward the robot (adding noise) and prediction step
@@ -106,9 +112,9 @@ bearing_array = [bearing_array; bearing];
 i = i+1;
 T = T+dt;
 
-if(abs(bearing-bearing_true) > 0.1 && abs(range-range_true) > 2)
-     diverge = 1;
-end
+% if(abs(bearing-bearing_true) > 0.1 && abs(range-range_true) > 2)
+%      diverge = 1;
+% end
 
 end
 %% Plot trajectories and landmark position
