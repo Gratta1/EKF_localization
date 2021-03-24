@@ -9,8 +9,8 @@ for i = 1:n_landmark
 y = [range_true(i); bearing_true(i)] - [range(i); bearing(i)];
 
 % Jacobian of the measurement model
-H = [((X(1) - X(4))/range(i)), (X(2) - X(5))/range(i), 0, (X(4) - X(1))/range(i), (X(5) - X(2))/range(i); ...
-    (X(5) - X(2))/range(i)^2, (X(1) - X(4))/range(i)^2, -1, (X(2) - X(5))/range(i)^2, (X(4) - X(1))/range(i)^2 ];
+H = [(X(1) - X(2+2*i))/range(i), (X(2) - X(2+2*i+1))/range(i), 0, (X(2+2*i) - X(1))/range(i), (X(5) - X(2+2*i+1))/range(i); ...
+    (X(2+2*i+1) - X(2))/range(i)^2, (X(1) - X(2+2*i))/range(i)^2, -1, (X(2+2*i+1) - X(5))/range(i)^2, (X(2+2*i) - X(1))/range(i)^2 ];
 
 F_j = zeros(5, 3+2*n_landmark);
 F_j(1,1) = 1;
@@ -24,9 +24,9 @@ K = covariance*G'*pinv(S);
 
 X = X + K*y;
 covariance = (eye(3+2*n_landmark)- K*G)*covariance;
-
-
 end
+
+
 
 updated_state = X;
 updated_covariance = covariance;

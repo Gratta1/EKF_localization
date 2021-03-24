@@ -24,7 +24,7 @@ Q(1,1) = 0.0005;
 Q(2,2) = 0.0005;
 Q(3,3) = 0.00005;
 mean_Q = zeros(1, 3+ 2*n_landmark);
-N = [ 0.002, 0; 0, 0.00002 ];
+N = [ 0.2, 0; 0, 0.02 ];
 noise = mvnrnd(mean_Q, Q)';
 X = [0; 0; 0; 52; 52; -32; -32];
 X_true = X - [0; 0; 0; 2; 2; -2; -2];
@@ -48,10 +48,10 @@ T = 0;
 rng('default')
 
 covariance = zeros(3+2*n_landmark);
-covariance(4,4) = 0.005;
-covariance(5,5) = 0.005;
-covariance(6,6) = 0.005;
-covariance(7,7) = 0.005;
+covariance(4,4) = 0.05;
+covariance(5,5) = 0.05;
+covariance(6,6) = 0.05;
+covariance(7,7) = 0.05;
 
 bearing_array = [];
 bearing_array_true = [];
@@ -73,8 +73,8 @@ noise_measure = mvnrnd([0, 0], N)';
 
 % Move forward the robot (adding noise) and prediction step
 covariance = predict_covariance(X, covariance, Q, u, dt, landmark);
-X_true = move_forward(X_true, u, dt, noise);
-X = prediction_step(X, u, dt);
+X_true = move_forward(X_true, u, dt, noise, n_landmark);
+X = prediction_step(X, u, dt, n_landmark);
 X(3) = wrapToPi(X(3));
 X_true(3) = wrapToPi(X_true(3));
 
@@ -122,8 +122,9 @@ figure
 hold on 
 plot(trajectory_x_true, trajectory_y_true)
 plot(trajectory_x, trajectory_y)
-plot(landmark(1), landmark(2), 'x')
+% plot(landmark(1), landmark(2), 'x')
 plot(X(4), X(5), 'x')
+plot(X(6), X(7), 'x')
 axis equal
 
 %% Plot other stuff
