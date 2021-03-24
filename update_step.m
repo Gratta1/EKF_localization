@@ -4,7 +4,9 @@ sum_1 = 0;
 sum_2 = 0;
 n_landmark = size(landmark, 1);
 active_landmark = 0;
+
 for i = 1:n_landmark
+    
    if abs(bearing(i) - bearing_true(i)) < 1
         y = [range_true(i); bearing_true(i)] - [range(i); bearing(i)];
 
