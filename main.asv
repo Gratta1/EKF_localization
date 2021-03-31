@@ -58,13 +58,13 @@ diverge = 0;
 
 %% Loop
 
-while( T < 100 && diverge == 0)
+while( T < 1000 && diverge == 0)
 
 % Create random input
 v=vmin+rand()*(vmax-vmin);
 w=wmin+rand()*(wmax-wmin);
 
-u = [5,5];
+u = [v,w];
 
 % Create state and measure noise
 noise = mvnrnd(mean_Q, Q)';
